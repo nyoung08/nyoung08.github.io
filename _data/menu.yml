@@ -2,19 +2,19 @@
 # https://github.com/riggraz/no-style-please#customize-the-menu
 
 entries:
-  - title: 
+  - title: 🅰🅱🅾🆄🆃
     entries:
       - title: github
         url: https://github.com/nyoung08
 
-  - title: all posts
+  - title: 🅰🅻🅻 🅿🅾🆂🆃🆂
     post_list:
       limit: 10
       show_more: true
       show_more_text: see more posts...
       show_more_url: archive
 
-  - title: rss
+  - title: 🆁🆂🆂
     url: feed.xml
 
 #sub_category
