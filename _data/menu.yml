@@ -14,8 +14,8 @@ entries:
       show_more_text: see more posts...
       show_more_url: archive
 
-  - title: rss
-    url: feed.xml
+#  - title: rss
+#    url: feed.xml
 
 #sub_category
 #  - title: Posts by category
