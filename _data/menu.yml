@@ -13,6 +13,15 @@ entries:
       show_more: true
       show_more_text: see more posts...
       show_more_url: archive
+  - title: 
+    entries:
+    - title: kans
+      post_list:
+        category: study
+        tag: kans
+        limit: 5
+     
+
 
 #  - title: rss
 #    url: feed.xml
