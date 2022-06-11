@@ -18,7 +18,7 @@ entries:
     - title: study
       post_list:
         category: study
-        tags: study
+        tag: study
         limit: 5
      
 
