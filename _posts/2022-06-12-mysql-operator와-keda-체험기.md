@@ -1,8 +1,8 @@
 ---
 layout: post
-title: [DOIK] keda로 mysql server 자동확장 체험기
+title: [DOIK] keda를 이용한 mysql server 자동 확장 체험기
 category: study
-tags: doik
+tags: study
 ---
 
 지난 네트워크 스터디에 이어 데이터베이스 오퍼레이터 스터디도 참여하게 되었다. 오퍼레이터 자체를 처음 접해서 헷갈리는 것들이 있지만… 그럼에도 중간과제는 찾아온다..! 2주차에서 알게된 mysql operator와 3주차에 알게된 KEDA를 사용하여 mysql 서버 파드를 자동확장 테스트를 하였다.
@@ -189,6 +189,31 @@ spec:
 ![4-3](/assets/img/doik1/4-3.png)
 
 ![4-4](/assets/img/doik1/4-4.png)
+
+400개를 먼저 지워봤을 때 증가 테스트 시 늘어난만큼 삭제되는 것을 확인할 수 있었다. 나머지 데이터들도 2개 빼고 모두 삭제 시 하나의 파드를 제외하고 모든 파드가 삭제되었다.
+
+
+🚧 해당 테스트를 진행하며 마주했던 오류들
+오류1
+Warning KEDAScalerFailed 6s (x12 over 16s) keda-operator error resolving secrets for ScaleTarget: couldn't find container with name .spec.template.spec.containers[0] on Target object
+
+> ScaledObject를 정의하는 파일에서 spec.scaleTargetRef.envSourceContainerName에 컨테이너 명을 적어야한다. 이런식으로 *spec.template.spec.containers[0] 적어서 발생한 오류였다.
+
+오류2
+Warning KEDAScalerFailed 0s (x10 over 3s) keda-operator error establishing MySQL connection: dial 10.200.1.135: unknown network 10.200.1.135
+
+> 처음에 Secret 파일에서 data.mysql_conn_str으로 mycluster svc ip를 넣었었는데 오류가 발생하여 router가 아닌 서버에 직접 연결되는 mycluster-instances svc를 host에 넣었다.
+
+
+---
+참고
+- [https://keda.sh/docs/2.5/scalers/mysql/](https://keda.sh/docs/2.5/scalers/mysql/)
+- [https://keda.sh/docs/1.4/concepts/authentication/#re-use-credentials-and-delegate-auth-with-triggerauthentication](https://keda.sh/docs/1.4/concepts/authentication/#re-use-credentials-and-delegate-auth-with-triggerauthentication)
+- [https://keda.sh/docs/2.7/concepts/scaling-deployments/](https://keda.sh/docs/2.7/concepts/scaling-deployments/)
+- [https://dev.mysql.com/doc/mysql-operator/en/mysql-operator-introduction.html](https://dev.mysql.com/doc/mysql-operator/en/mysql-operator-introduction.html) 
+
+
+
 
 
 

@@ -2,7 +2,7 @@
 layout: post
 title: [KANS] gke dataplane v2 체험기 (cilium)
 category: study
-tags: kans
+tags: study
 ---
  
 7주차에 cilium 을 배우면서 gke 위에서는 어떻게 돌지 궁금하여 졸업과제 겸 체험해봤다. 
