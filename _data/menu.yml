@@ -16,9 +16,9 @@ entries:
   - title: 📎 
     entries:
     - title: study
-      tags: study
       post_list:
         category: study
+        tags: study
         limit: 5
         show_more: true
         show_more_text: see more posts...
