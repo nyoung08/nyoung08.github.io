@@ -15,9 +15,10 @@ entries:
       show_more_url: archive
   - title: 📎 
     entries:
-    - title: 👻
+    - title: study
       post_list:
         category: study
+        tag: study
         limit: 5
      
 
