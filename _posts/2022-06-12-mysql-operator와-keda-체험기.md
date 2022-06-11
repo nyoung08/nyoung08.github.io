@@ -95,9 +95,8 @@ metadata:
   name: keda-trigger-auth-mysql-secret
 spec:
   secretTargetRef:
-  # 자격증명을 위해 위에서 만들었던 secret 내용들을 넣어준다.
-  # parameter는 링크 참고 https://keda.sh/docs/2.7/scalers/mysql/
-  # https://keda.sh/docs/1.4/concepts/authentication/#re-use-credentials-and-delegate-auth-with-triggerauthentication
+  # 자격증명을 위해 위에서 만들었던 secret 내용들을 넣어준다. [참고](https://keda.sh/docs/1.4/concepts/authentication/#re-use-credentials-and-delegate-auth-with-triggerauthentication)
+  # parameter는 [링크 참고](https://keda.sh/docs/2.7/scalers/mysql/)
   - parameter: host
     name: mysql-secrets
     key: mysql_host
@@ -119,8 +118,7 @@ kind: ScaledObject
 metadata:
   name: mysql-scaledobject
 spec:
-# 다른 옵션들은 링크 참고
-# https://keda.sh/docs/2.7/concepts/scaling-deployments/
+# 다른 옵션들은 [링크 참고](https://keda.sh/docs/2.7/concepts/scaling-deployments/)
   pollingInterval: 1                    # Optional. Default: 30 seconds
   cooldownPeriod:  10                   # Optional. Default: 300 seconds
   minReplicaCount: 1                    # Optional. Default: 0
