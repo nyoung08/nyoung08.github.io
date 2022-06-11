@@ -1,6 +1,6 @@
 ---
 layout: post
-title: [DOIK] keda를 이용한 mysql server 자동 확장 체험기
+title: DOIK🍐  keda를 이용한 mysql server 자동 확장 체험기
 category: study
 ---
 
