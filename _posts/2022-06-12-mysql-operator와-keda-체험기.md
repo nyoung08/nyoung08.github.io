@@ -1,7 +1,8 @@
 ---
 layout: post
-title: DOIK🍐  keda를 이용한 mysql server 자동 확장 체험기
+title: DOIK) keda를 이용한 mysql server 자동 확장 체험기
 category: study
+tags: study
 ---
 
 지난 네트워크 스터디에 이어 데이터베이스 오퍼레이터 스터디도 참여하게 되었다. 오퍼레이터 자체를 처음 접해서 헷갈리는 것들이 있지만… 그럼에도 중간과제는 찾아온다..! 2주차에서 알게된 mysql operator와 3주차에 알게된 KEDA를 사용하여 mysql 서버 파드를 자동확장 테스트를 하였다.
