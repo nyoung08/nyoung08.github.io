@@ -195,12 +195,12 @@ spec:
 오류1
 Warning KEDAScalerFailed 6s (x12 over 16s) keda-operator error resolving secrets for ScaleTarget: couldn't find container with name .spec.template.spec.containers[0] on Target object
 
-> ScaledObject를 정의하는 파일에서 spec.scaleTargetRef.envSourceContainerName에 컨테이너 명을 적어야한다. 이런식으로 *spec.template.spec.containers[0] 적어서 발생한 오류였다.
+▶️  ScaledObject를 정의하는 파일에서 spec.scaleTargetRef.envSourceContainerName에 컨테이너 명을 적어야한다. 이런식으로 *spec.template.spec.containers[0] 적어서 발생한 오류였다.
 
 오류2
 Warning KEDAScalerFailed 0s (x10 over 3s) keda-operator error establishing MySQL connection: dial 10.200.1.135: unknown network 10.200.1.135
 
-> 처음에 Secret 파일에서 data.mysql_conn_str으로 mycluster svc ip를 넣었었는데 오류가 발생하여 router가 아닌 서버에 직접 연결되는 mycluster-instances svc를 host에 넣었다.
+▶️  처음에 Secret 파일에서 data.mysql_conn_str으로 mycluster svc ip를 넣었었는데 오류가 발생하여 router가 아닌 서버에 직접 연결되는 mycluster-instances svc를 host에 넣었다.
 
 
 ---
