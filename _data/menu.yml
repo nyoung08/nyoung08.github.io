@@ -20,6 +20,9 @@ entries:
         category: study
         tag: study
         limit: 5
+        show_more: true
+        show_more_text: see more posts...
+        show_more_url: archive
      
 
 
