@@ -59,7 +59,7 @@ deployment/keda-operator-metrics-apiserver : metric server 역할
 # mysql 접근시 사용할 svc ip변수지정
 > MYSQLIP=$(kubectl get svc -n mysql-cluster mycluster -o jsonpath={.spec.clusterIP})
 
-# 데이터베이스 생성
+# 데이터베이스 및 테이블 생성
 > mysql -h $MYSQLIP -uroot -psakila <<EOF
   CREATE DATABASE testdb;
   CREATE TABLE testdb.testtable (testcolumn1 INT PRIMARY KEY,testcolumn2 TEXT NOT NULL);
@@ -97,8 +97,10 @@ metadata:
   name: keda-trigger-auth-mysql-secret
 spec:
   secretTargetRef:
-  # 자격증명을 위해 위에서 만들었던 secret 내용들을 넣어준다. [참고](https://keda.sh/docs/1.4/concepts/authentication/#re-use-credentials-and-delegate-auth-with-triggerauthentication)
-  # parameter는 [링크 참고](https://keda.sh/docs/2.7/scalers/mysql/)
+  # 자격증명을 위해 위에서 만들었던 secret 내용들을 넣어줌
+  # https://keda.sh/docs/1.4/concepts/authentication/#re-use-credentials-and-delegate-auth-with-triggerauthentication
+  # parameter 참고
+  # https://keda.sh/docs/2.7/scalers/mysql/
   - parameter: host
     name: mysql-secrets
     key: mysql_host
@@ -120,7 +122,8 @@ kind: ScaledObject
 metadata:
   name: mysql-scaledobject
 spec:
-# 다른 옵션들은 [링크 참고](https://keda.sh/docs/2.7/concepts/scaling-deployments/)
+# 다른 옵션 참고
+# https://keda.sh/docs/2.7/concepts/scaling-deployments/
   pollingInterval: 1                    # Optional. Default: 30 seconds
   cooldownPeriod:  10                   # Optional. Default: 300 seconds
   minReplicaCount: 1                    # Optional. Default: 0
