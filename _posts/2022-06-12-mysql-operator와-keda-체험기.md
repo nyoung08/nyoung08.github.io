@@ -77,6 +77,7 @@ KEDA(Kubernetes-based Event Driven Autoscaler)는 특정 이벤트 기반으로 
 keda를 사용하기 위해 확장할 개체를 정의해준다. [참고링크](https://keda.sh/docs/2.7/scalers/mysql/)
 
 ```
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -84,6 +85,7 @@ metadata:
 type: Opaque
 # base64로 인코딩하여야함
 # $echo -n 'value' | base64
+
 data:
   mysql_host: bXljbHVzdGVyLWluc3RhbmNlcy5teXNxbC1jbHVzdGVyLnN2Yy5jbHVzdGVyLmxvY2Fs
   # mycluster-instances svc domain
@@ -91,7 +93,9 @@ data:
   mysql_db: dGVzdGRi
   mysql_user: cm9vdA==
   mysql_password: c2FraWxh
+
 ---
+
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
@@ -100,8 +104,10 @@ spec:
   secretTargetRef:
   # 자격증명을 위해 위에서 만들었던 secret 내용들을 넣어줌
   # https://keda.sh/docs/1.4/concepts/authentication/#re-use-credentials-and-delegate-auth-with-triggerauthentication
+
   # parameter 참고
   # https://keda.sh/docs/2.7/scalers/mysql/
+
   - parameter: host
     name: mysql-secrets
     key: mysql_host
@@ -117,7 +123,9 @@ spec:
   - parameter: password
     name: mysql-secrets
     key: mysql_password
+
 ---
+
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
@@ -125,18 +133,21 @@ metadata:
 spec:
 # 다른 옵션 참고
 # https://keda.sh/docs/2.7/concepts/scaling-deployments/
-  pollingInterval: 1                    # Optional. Default: 30 seconds
-  cooldownPeriod:  10                   # Optional. Default: 300 seconds
-  minReplicaCount: 1                    # Optional. Default: 0
-  maxReplicaCount: 10                   # Optional. Default: 100
+
+  pollingInterval: 1                    # default 30s
+  cooldownPeriod:  10                   # default 300s
+  minReplicaCount: 1                    # default 0
+  maxReplicaCount: 10                   # default 100
   scaleTargetRef:
     apiVersion: apps/v1   
-    kind: StatefulSet                   # Optional. Default: Deployment
+    kind: StatefulSet                   # default Deployment
     name: mycluster 
-    envSourceContainerName: mysql       # 미지정시 첫번째 컨테이너 속성을 가져옴 (.spec.template.spec.containers[0])
+    envSourceContainerName: mysql       
+    # 미지정시 첫번째 컨테이너 속성을 가져옴 
+    # .spec.template.spec.containers[0]
   advanced:                                         
-    restoreToOriginalReplicaCount: true # Optional. Default: false
-    # ScaledObject 삭제 시 늘어난 복제 수를 유지하지않고 기존에 지정한 복제 수로 돌아옴    
+    restoreToOriginalReplicaCount: true # default false
+    # ScaledObject 삭제 시 늘어난 복제 수를 유지하지 않고 기존에 지정한 복제 수로 돌아옴    
     horizontalPodAutoscalerConfig:                  
       behavior:                                      
         scaleDown:
@@ -153,6 +164,7 @@ spec:
       query: "SELECT CEIL(COUNT(*) / 6) FROM testdb.testtable WHERE testcolumn2='none'"  
     authenticationRef:
       name: keda-trigger-auth-mysql-secret
+
 ```
 
 ![3-2](/assets/img/doik1/3-2.png)
