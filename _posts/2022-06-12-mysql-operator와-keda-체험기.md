@@ -10,7 +10,7 @@ tags: study
 사용할 mysql operator와 keda를 간략하게 소개하자면,
 
 
-mysql operator는 쿠버네티스 클러스터 내 mysql innoDB 클러스터를 관리해주는 operator 이다. [참고](https://dev.mysql.com/doc/mysql-operator/en/mysql-operator-introduction.html)
+mysql operator는 쿠버네티스 클러스터 내 mysql innoDB 클러스터를 관리해주는 operator 이다. [참고링크](https://dev.mysql.com/doc/mysql-operator/en/mysql-operator-introduction.html)
 
 ```
 # mysql operator와 mysql-innodbcluster 설치
@@ -27,15 +27,16 @@ mysql-operator 네임스페이스에는 deployment로 배포된 InnoDB 클러스
 ![1-3](/assets/img/doik1/1-3.png)
 
 mysql-cluster 네임스페이스에 있는 리소스들이 InnoDB 클러스터 구성한다.
-statefulset/mycluster : mysql server instance
-deployment/mycluster-router : mysql router(proxy 역할)
-service/mycluster : mysql router로 접근됨
-service/mycluster-instances : 특정 서버 접근 시 사용
-configmap/mycluster-initconf : mysql config
+
+- statefulset/mycluster : mysql server instance
+- deployment/mycluster-router : mysql router(proxy 역할)
+- service/mycluster : mysql router로 접근됨
+- service/mycluster-instances : 특정 서버 접근 시 사용
+- configmap/mycluster-initconf : mysql config
 
 
 
-KEDA(Kubernetes-based Event Driven Autoscaler)는 특정 이벤트 기반으로 자동 확장해주는 도구이다. [참고](https://keda.sh/docs/2.7/concepts/)
+KEDA(Kubernetes-based Event Driven Autoscaler)는 특정 이벤트 기반으로 자동 확장해주는 도구이다. [참고링크](https://keda.sh/docs/2.7/concepts/)
 
 ```
 > helm repo add kedacore https://kedacore.github.io/charts
@@ -44,8 +45,8 @@ KEDA(Kubernetes-based Event Driven Autoscaler)는 특정 이벤트 기반으로 
 
 ![2-2](/assets/img/doik1/2-2.png)
 
-deployment/keda-operator : agent 역할
-deployment/keda-operator-metrics-apiserver : metric server 역할
+- deployment/keda-operator : agent 역할
+- deployment/keda-operator-metrics-apiserver : metric server 역할
 
 
 
@@ -73,7 +74,7 @@ deployment/keda-operator-metrics-apiserver : metric server 역할
 
 
 #### keda.yaml
-keda를 사용하기 위해 확장할 개체를 정의해준다. [참고](https://keda.sh/docs/2.7/scalers/mysql/)
+keda를 사용하기 위해 확장할 개체를 정의해준다. [참고링크](https://keda.sh/docs/2.7/scalers/mysql/)
 
 ```
 apiVersion: v1
