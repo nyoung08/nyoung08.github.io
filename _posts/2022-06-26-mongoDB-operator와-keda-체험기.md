@@ -30,7 +30,7 @@ tags: study
 > kubectl apply -f deploy/operator.yaml
 # secrets 생성
 > kubectl create -f deploy/secrets.yaml
-# cluster 생성 (kind: PerconaServerMongoDB)
+# cluster 생성 
 > kubectl apply -f deploy/cr.yaml
 ```
 
