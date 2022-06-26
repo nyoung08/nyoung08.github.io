@@ -9,6 +9,7 @@ tags: study
 테스트 해 본 결과부터 말하자면, keda로는 replica를 확장하는게 아니라 지정한 이상의 값이 들어왔을 때 특정 작업을 트리거하는 정도로 사용할 수 있을 것 같다. 지난 중간과제 때 테스트했던 mysql operator의 경우 deployment를 지정하여 확장가능했었지만, mongoDB operator의 경우 statefulset이 있음에도 불구하고 해당 컨트롤러를 지정하여 확장 불가능하고 트리거될 때 생성할 파드의 템플릿을 작성하게 되어있다. 
 
 
+
 🥭
 사용하게 될 mongoDB operator의 경우 percona에서 제공하는 오퍼레이터를 사용하였다. mongoDB의 엔터프라이즈 버전에서만 제공되는 몇 가지를 무료로 사용할 수 있다. [🔗](https://docs.percona.com/percona-server-for-mongodb/5.0/comparison.html)
 
