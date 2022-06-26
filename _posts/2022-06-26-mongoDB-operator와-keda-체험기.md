@@ -1,6 +1,6 @@
 ---
 layout: post
-title: DOIK) keda와 함께하는 mongoDB operator 체험기🥭
+title: DOIK) keda와 함께하는 mongoDB operator 체험기
 category: study
 tags: study
 ---
