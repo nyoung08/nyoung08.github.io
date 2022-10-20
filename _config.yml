@@ -26,3 +26,14 @@ sass:
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+
+comments:
+  provider: utterances        
+
+utterances:
+  repo: "nyoung08/nyoung08.github.io"
+  issue-term: "pathname"
+  label: "Comments"
+  theme: "github-light"
+
+
