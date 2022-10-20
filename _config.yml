@@ -31,7 +31,7 @@ comments:
   provider: utterances        
 
 utterances:
-  repo: "nyoung08/nyoung08.github.io"
+  repo: "nyoung08/4comment"
   issue-term: "pathname"
   label: "Comments"
   theme: "github-light"
