@@ -4,8 +4,7 @@ email: 08eychoi@gmail.com
 url: https://nyoung08.github.io
 baseurl: "/"
 # subpath of the site, e.g. "/blog" (leave it blank "" if you're site shouldn't use a subpath)
-description: " 😇"
-# description of the site (multiple lines allowed)
+#description: >  description of the site (multiple lines allowed)
 
 permalink: pretty
 #permalink: /:slug.html
