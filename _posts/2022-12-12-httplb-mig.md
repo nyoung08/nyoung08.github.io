@@ -1,6 +1,6 @@
 ---
 layout: post
-title: T101) http lb - mig
+title: T101) http lb와 mig 구성
 category: study
 tags: study
 ---
