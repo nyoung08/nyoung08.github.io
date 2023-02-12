@@ -9,17 +9,22 @@ entries:
 
   - title: all posts
     post_list:
-      limit: 10
+      limit: 3
       show_more: true
       show_more_text: see more posts...
       show_more_url: archive
   - title: 📎 
     entries:
+    - title: gcp
+      post_list:
+        category: gcp
+        tag: gcp
+        limit: 5
     - title: study
       post_list:
         category: study
         tag: study
-        limit: 3
+        limit: 5
         show_more: true
         show_more_text: see more posts...
         show_more_url: archive
