@@ -1,6 +1,6 @@
 ---
 layout: post
-title: gpc) iam condition으로 
+title: gcp) iam condition으로 권한 제한하기
 category: gcp
 tags: gcp
 ---
