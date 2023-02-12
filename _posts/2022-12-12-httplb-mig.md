@@ -1,6 +1,6 @@
 ---
 layout: post
-title: T101) http lb와 mig 구성
+title: T101) gcp에서의 http lb와 mig 구성
 category: study
 tags: study
 ---
