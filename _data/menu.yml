@@ -20,13 +20,16 @@ entries:
         category: gcp
         tag: gcp
         limit: 5
+        show_more: true
+        show_more_text: see more ... 🐌
+        show_more_url: gcp
     - title: study
       post_list:
         category: study
         tag: study
         limit: 5
         show_more: true
-        show_more_text: see more posts...
+        show_more_text: see more ... 🐢
         show_more_url: study
      
 
