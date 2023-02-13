@@ -1,0 +1,4 @@
+---
+layout: study
+title: Study
+---
