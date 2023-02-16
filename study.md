@@ -1,5 +1,5 @@
 ---
 layout: study
 which_category: study
-title: Study
+title: study
 ---
