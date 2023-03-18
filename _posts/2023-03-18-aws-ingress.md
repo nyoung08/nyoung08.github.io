@@ -122,15 +122,11 @@ kind: Ingress
 metadata:
   name: test-ingress
   annotations:
-    # ssl certificate arn
     alb.ingress.kubernetes.io/certificate-arn: $CERT-ARN
-    # 외부에서 접근하는 lb로 생성
     alb.ingress.kubernetes.io/scheme: internet-facing
-    # 트래픽이 pod ip로 직접 전달됨
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
-    # http-https redirect 설정
     alb.ingress.kubernetes.io/ssl-redirect: '443'
 spec:
   ingressClassName: alb
@@ -153,6 +149,25 @@ spec:
             port:
               number: 9002
 ```
+
+ 
+사용한 annotation을 살펴보면
+- alb.ingress.kubernetes.io/certificate-arn: $CERT-ARN
+  > ssl certificate arn
+- alb.ingress.kubernetes.io/scheme: internet-facing
+  > 외부에서 lb로 접근 가능  (default: internal)
+- alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+  > 트래픽이 흐르는 포트로 healthcheck
+- alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+  > listen port 설정
+- alb.ingress.kubernetes.io/ssl-redirect: '443'
+  > http-https redirect 설정
+- alb.ingress.kubernetes.io/target-type: ip
+  > 외부에서 pod로 트래픽이 바로 전달됨 
+
+> kubernetes svc 문서를 보면 externalTrafficPolicy의 default 값이 cluster로 되어있다. 기본적으로 외부에서 접근시 pod로 바로 가는 것이 아니라, 아무 노드에 가서 iptables를 보고 pod가 있는 node로 가게되어 홉이 두개가 발생하게된다. 해당 문제로 대한 latency를 줄이기 위해 aws에서 지원하는 target-type을 ip로 변경했다. 콘솔에서도 확인해보면 lb의 target이 node가 아닌 pod ip로 되어있는 것을 확인 할 수 있다. 참고로, gke의 경우(1.17버전이상) 기본으로 network endpoint group으로 배포되어 lb에서 바로 pod로 패킷이 전달된다.
+
+
 
 배포 후 접속을 위해 아래 작업이 필요하다. 
 현재 해당 파드들의 이미지에는 각 경로가 없기때문에 생성이 필요하다.
@@ -213,4 +228,5 @@ last-modified: Wed, 18 Sep 2019 16:09:40 GMT
 - [https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/tasks/ssl_redirect/](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/tasks/ssl_redirect/)
 - [https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/ingress/annotations/](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/ingress/annotations/)
 - [https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html#target-type](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html#target-type)
-
+- [https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/)
+- [https://cloud.google.com/kubernetes-engine/docs/concepts/container-native-load-balancing](https://cloud.google.com/kubernetes-engine/docs/concepts/container-native-load-balancing)
