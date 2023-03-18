@@ -1,6 +1,6 @@
 ---
 layout: post
-title: pkos) aws ingress controller 사용기
+title: pkos) aws ingress controller 체험기
 category: 
   - study
   - aws
