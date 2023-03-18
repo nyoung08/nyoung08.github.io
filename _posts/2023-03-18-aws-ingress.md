@@ -165,7 +165,7 @@ spec:
 - alb.ingress.kubernetes.io/target-type: ip
   : 외부에서 pod로 트래픽이 바로 전달됨 
 
-> ✏️   kubernetes svc 문서를 보면 externalTrafficPolicy의 default 값이 cluster로 되어있다. 기본적으로 외부에서 접근시 pod로 바로 가는 것이 아니라, 아무 노드에 가서 iptables를 보고 pod가 있는 node로 가게되어 홉이 두개가 발생하게된다. 해당 문제로 대한 latency를 줄이기 위해 aws에서 지원하는 target-type을 ip로 변경했다. 콘솔에서도 확인해보면 lb의 target이 node가 아닌 pod ip로 되어있는 것을 확인 할 수 있다. 참고로, gke의 경우(1.17버전이상) 기본으로 network endpoint group으로 배포되어 lb에서 바로 pod로 패킷이 전달된다.
+> ✏️   kubernetes svc 문서를 보면 externalTrafficPolicy의 default 값이 cluster로 되어있다. 기본적으로 외부에서 접근시 pod로 바로 가는 것이 아니라, 아무 노드에 가서 iptables를 보고 pod가 있는 node로 가게되어 홉이 두개가 발생하게된다. 해당 문제로 대한 latency를 줄이기 위해 aws에서 지원하는 target-type을 ip로 변경했다. 콘솔에서도 확인해보면 lb의 target이 node가 아닌 pod ip로 되어있는 것을 확인 할 수 있다. 참고로, gke의 경우(1.17버전이상) 기본으로 network endpoint group으로 생성되어 lb에서 바로 pod로 패킷이 전달된다.
 
 
 
