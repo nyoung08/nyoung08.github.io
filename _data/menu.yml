@@ -16,15 +16,20 @@ entries:
       show_more_text: see more posts...
       show_more_url: archive
   - title: 📎 
-    entries:
-    - title: gcp
-      post_list:
-        limit: 0
-        show_more: true
-        show_more_text: gcp 🐌
-        show_more_url: gcp
-        show_more_text: study 🐢
-        show_more_url: study
+      show_more: true
+      show_more_text: gcp 🐌
+      show_more_url: gcp
+      show_more_text: study 🐢
+      show_more_url: study
+#    entries:
+#    - title: gcp
+#      post_list:
+#        limit: 0
+#        show_more: true
+#        show_more_text: gcp 🐌
+#        show_more_url: gcp
+#        show_more_text: study 🐢
+#        show_more_url: study
 #    - title: study
 #      post_list:
 #        category: study
