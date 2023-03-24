@@ -16,8 +16,10 @@ entries:
       show_more_text: see more posts...
       show_more_url: archive
   - title: 📎 
+    show_more: true
     show_more_url: gcp
   - title: 🔗
+    show_more: true
     show_more_url: study
 #    entries:
 #    - title: gcp
