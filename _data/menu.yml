@@ -18,24 +18,20 @@ entries:
   - title: 📎 
     entries:
     - title: gcp
+      post_list:
+        limit: 0
         show_more: true
+        show_more_text: gcp 🐌
         show_more_url: gcp
-#      post_list:
-#        limit: 0
-#        show_more: true
-#        show_more_text: gcp 🐌
-#        show_more_url: gcp
-#        show_more_text: study 🐢
-#        show_more_url: study
-#    - title: study
-#      post_list:
-#        category: study
-#        tag: study
-#        limit: 0
-#        show_more: true
-#        show_more_text: study 🐢
-#        show_more_url: study
-     
+    - title: study
+      post_list:
+        category: study
+        tag: study
+        limit: 0
+        show_more: true
+        show_more_text: study 🐢
+        show_more_url: study
+    
 
 
 #  - title: rss
