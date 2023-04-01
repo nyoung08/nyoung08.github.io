@@ -1,7 +1,8 @@
 title: nyoung note
 author: nyoung
 email: 08eychoi@gmail.com
-url: https://nyoung08.github.io
+url: http://localhost:4000
+#url: https://nyoung08.github.io
 baseurl: "/"
 future: true
 # subpath of the site, e.g. "/blog" (leave it blank "" if you're site shouldn't use a subpath)
