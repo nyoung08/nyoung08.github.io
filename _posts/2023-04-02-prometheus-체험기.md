@@ -12,6 +12,7 @@ tags:
 
 ![1-0](/assets/img/pkos/prometheus/1-0.png)
 이미지 링크[🔗](https://kubernetes.io/ko/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
+
 쿠버네티스에서 리소스의 사용량을 확인하기 위한 kubectl top 명령어 같은 경우는, kubelet에 내장되어있는 cAdvisor를 통해 컨테이너 메트릭이 수집되는 것이다. 아래 명령어로 확인해 보면 cpu와 memory의 사용량 확인이 가능한 것을 볼 수 있다.
 
 
@@ -46,12 +47,11 @@ prometheus의 아키텍처를 보면 node exporter로부터 pull방식으로 메
 ❯ k create ns monitoring
 namespace/monitoring created
 ❯ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-cat <<EOT > ~/monitor-values.yaml
+❯ vi  ~/monitor-values.yaml
 alertmanager:
   ingress:
     enabled: true
     ingressClassName: alb
-
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip
@@ -59,21 +59,17 @@ alertmanager:
       alb.ingress.kubernetes.io/certificate-arn: $CERT_ARN
       alb.ingress.kubernetes.io/success-codes: 200-399
       alb.ingress.kubernetes.io/group.name: "monitoring"
-
     hosts:
       - alertmanager.nyoung.xyz
-
     paths:
       - /*
 
 grafana:
   defaultDashboardsTimezone: Asia/Seoul
   adminPassword: prom-operator
-
   ingress:
     enabled: true
     ingressClassName: alb
-
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip
@@ -81,10 +77,8 @@ grafana:
       alb.ingress.kubernetes.io/certificate-arn: $CERT_ARN
       alb.ingress.kubernetes.io/success-codes: 200-399
       alb.ingress.kubernetes.io/group.name: "monitoring"
-
     hosts:
       - grafana.nyoung.xyz
-
     paths:
       - /*
 
@@ -92,7 +86,6 @@ prometheus:
   ingress:
     enabled: true
     ingressClassName: alb
-
     annotations:
       alb.ingress.kubernetes.io/scheme: internet-facing
       alb.ingress.kubernetes.io/target-type: ip
@@ -100,19 +93,15 @@ prometheus:
       alb.ingress.kubernetes.io/certificate-arn: $CERT_ARN
       alb.ingress.kubernetes.io/success-codes: 200-399
       alb.ingress.kubernetes.io/group.name: "monitoring"
-
     hosts:
       - prometheus.nyoung.xyz
-
     paths:
       - /*
-
   prometheusSpec:
     podMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
     retention: 5d
     retentionSize: "10GiB"
-EOT
 
 ❯ helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --version 45.7.1 --set prometheus.prometheusSpec.scrapeInterval='15s' --set prometheus.prometheusSpec.evaluationInterval='15s' -f ~/prometheus/values.yaml -n monitoring
 
@@ -159,7 +148,7 @@ endpoints/kube-prometheus-stack-prometheus-node-exporter   172.30.44.190:9100,17
 ...
 
 33 clusterDomain: nyoung.xyz
-517   type: clustIP
+517   type: ClusterIP
 581 ingress:
 584   enabled: true
 596   hostname: nginx.nyoung.xyz
@@ -167,10 +156,9 @@ endpoints/kube-prometheus-stack-prometheus-node-exporter   172.30.44.190:9100,17
 612        alb.ingress.kubernetes.io/scheme: internet-facing
 613        alb.ingress.kubernetes.io/target-type: ip
 614        alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-615        alb.ingress.kubernetes.io/certificate-arn: $CERT_AR
+615        alb.ingress.kubernetes.io/certificate-arn: $CERT_ARN
 622   ingressClassName: alb
 685   hostname: nyoung.xyz
-
 763 metrics:
 766   enabled: true
 769   port: 9113
@@ -180,7 +168,6 @@ endpoints/kube-prometheus-stack-prometheus-node-exporter   172.30.44.190:9100,17
 814       prometheus.io/scrape: "true"
 815       prometheus.io/path: "/metrics"
 816       prometheus.io/port: "{{ .Values.metrics.service.port }}"
-
 839   serviceMonitor:
 842     enabled: true
 845     namespace: monitoring
@@ -254,6 +241,7 @@ alerting > notification policies > new policy에서 새로운 alert 정책을 �
 
 원래는 위에서 prometheus에 rule을 넣어준 상태코드값으로 alert정책을 만들려 했는데.. 왜인지.. status code값을 가져오지를 못한다 😇
 prometheus에서 scrape config를 추가도 해줘보고 nginx exporter 부분도 변경해보고 혹시나 권한문제일까 clusterrole에 과분하게 권한도 줘봤지만.. 해결하지 못했다.
+오ㅐ일까 .. .
 
 
 ---
