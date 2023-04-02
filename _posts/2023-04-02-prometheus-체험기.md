@@ -132,7 +132,49 @@ endpoints/kube-prometheus-stack-prometheus-node-exporter   172.30.44.190:9100,17
 ```
 ❯ k get prometheusrules.monitoring.coreos.com kube-prometheus-stack-node-exporter -oyaml -n monitoring > prometheusrules.yaml
 # 생성된 파일 하단에 prometheus에서 제공하는 nginx 내용을 복사 후 붙여넣음
+
+...
 # 테스트시 빠르게 하기 위해 5m > 1m으로 조정
+- name: nginx-exporter
+    rules:
+    - alert: NginxHighHttp4xxErrorRate
+      annotations:
+        description: |-
+          Too many HTTP requests with status 4xx (> 5%)
+            VALUE = {{ $value }}
+            LABELS = {{ $labels }}
+        summary: Nginx high HTTP 4xx error rate (instance {{ $labels.instance }})
+      expr: sum(rate(nginx_http_requests_total{status=~"^4.."}[1m])) / sum(rate(nginx_http_requests_total[1m]))
+        * 100 > 1
+      for: 1m
+      labels:
+        severity: critical
+    - alert: NginxHighHttp5xxErrorRate
+      annotations:
+        description: |-
+          Too many HTTP requests with status 5xx (> 5%)
+            VALUE = {{ $value }}
+            LABELS = {{ $labels }}
+        summary: Nginx high HTTP 5xx error rate (instance {{ $labels.instance }})
+      expr: sum(rate(nginx_http_requests_total{status=~"^5.."}[1m])) / sum(rate(nginx_http_requests_total[1m]))
+        * 100 > 1
+      for: 1m
+      labels:
+        severity: critical
+    - alert: NginxLatencyHigh
+      annotations:
+        description: |-
+          Nginx p99 latency is higher than 3 seconds
+            VALUE = {{ $value }}
+            LABELS = {{ $labels }}
+        summary: Nginx latency high (instance {{ $labels.instance }})
+      expr: histogram_quantile(0.99, sum(rate(nginx_http_request_duration_seconds_bucket[2m]))
+        by (host, node)) > 3
+      for: 2m
+      labels:
+        severity: warning
+...
+
 
 ❯ k apply -f prometheusrules.yaml
 # status > rules에 가면 추가된 것을 확인할 수 있음
