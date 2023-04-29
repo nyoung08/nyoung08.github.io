@@ -19,7 +19,7 @@ tags:
 
 aws의 관리형 쿠버네티스의 eks는 controlplane이 사용자의 vpc가 아닌 aws가 관리하는 vpc에 위치하게 된다. 실제 어플리케이션이 올라가는 dataplane이 사용자의vpc에 올라가게 되는데, 이때 controleplane에서 dataplane으로 내부 통신 할 수 있도록 eni가 연결된다. 이때 외,내부와 통신 방식에 따라 세가지 방식으로 클러스터가 달라진다. 
 
-테스트는 eksctl을 사용해서 managed node group이 있는 cluster 생성하며, ap-northeast-2리전의 a,c존에 각각 생성된 public, private subet을 이용했다.
+테스트는 eksctl을 사용해서 managed node group이 있는 cluster 생성하며, ap-northeast-2리전의 a,c존 두개의 subnet을 이용했다.
 
 
 # eks cluster endpoint
