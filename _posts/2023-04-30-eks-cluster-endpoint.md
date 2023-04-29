@@ -32,7 +32,7 @@ public이 기본값이기 때문에, 다른 설정없이 cluster를 생성했다
 
 (eunyoung@myeks:default) [root@myeks-host ~]# eksctl create cluster --name $CLUSTER_NAME --region=ap-northeast-2 \
  --nodegroup-name=mynodegroup --node-type=t3.medium \
- --node-volume-size=30 --vpc-public-subnets "$PubSubnet1,$PubSubnet2" \
+ --node-volume-size=30 --vpc-public-subnets "$subnet1,$subnet2" \
  --version 1.24 --ssh-access --external-dns-access --verbose 4
 
 ```
