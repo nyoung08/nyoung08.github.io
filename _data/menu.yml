@@ -21,15 +21,21 @@ entries:
       post_list:
         limit: 0
         show_more: true
-        show_more_text: gcp 🐌
+        show_more_text: gcp . ..🐌
         show_more_url: gcp
+    - title: aws
+      post_list:
+        limit: 0
+        show_more: true
+        show_more_text: 🐢 . ..aws
+        show_more_url: aws
     - title: study
       post_list:
         category: study
         tag: study
         limit: 0
         show_more: true
-        show_more_text: study 🐢
+        show_more_text: study 🐝
         show_more_url: study
     
 
