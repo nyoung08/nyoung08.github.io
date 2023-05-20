@@ -38,7 +38,7 @@ fields @timestamp, @message
 
 ### install cloudwatch agent
 
-클러스터 로그를 prometheus에서 logging으로 보내어 확인을 위해, cloud watch agent가 필요하다. (🔗)[https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights-Prometheus-install-EKS.html]
+클러스터 로그를 prometheus에서 logging으로 보내어 확인을 위해, cloud watch agent가 필요하다. [🔗](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights-Prometheus-install-EKS.html)
 
 ```
 (eunyoung@myeks:default) [root@myeks-bastion-EC2 ~]# eksctl create iamserviceaccount \
@@ -65,7 +65,7 @@ fields @timestamp, @message
 (eunyoung@myeks:default) [root@myeks-bastion-EC2 ~]# kubectl apply -f prometheus-eks.yaml
 ```
 
-![1-2](/assets/img/aews/3w/1-2.png)
+![1-2](/assets/img/aews/4w/1-2.png)
 myeks cluster 로그 그룹 말고 /myeks/prometheus가 생긴 것을 확인 할 수 있다. 
 
 
