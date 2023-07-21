@@ -143,7 +143,7 @@ configmap을 확인해보면 host-log, application-log, dataplane-log 세가지�
 ![1-5](/assets/img/aews/4w/1-5.png)
  
 로그 그룹 하나에 들어가서 보면, 잘 쌓여가는 것을 볼 수 있다.
-![1-6)(/assets/img/aews/4w/1-6.png)
+![1-6](/assets/img/aews/4w/1-6.png)
 
 
 ### create dashbaord
