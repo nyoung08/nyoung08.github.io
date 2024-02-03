@@ -1,0 +1,257 @@
+---
+layout: post
+title: a101) ansible 시스템 구축 자동화 
+category:
+  - study
+  - ansible
+tags:
+  - study
+  - ansible
+---
+
+시스템 구축 자동화로 계정 생성, 패키지 설치 등에 대해 학습했다. 
+
+# aws secretmanager를 활용하여 사용자 계정 생성
+
+테스트하는 ansible 환경은 아래와 같다.
+```
+#ansible.cfg
+[defaults]
+inventory = ./inventory
+remote_user = ubuntu
+ask_pass = false
+[privilege_escalation]
+become = true
+become_method = sudo
+become_user = root
+become_ask_pass = false
+
+#inventory
+[tnode]
+tnode1
+tnode2
+tnode3
+```
+
+사용자 생성시 사용 할 계정 정보를 ansible-vault를 이용하여 암호화 해주었다.
+```
+$ ansible-vault create vars/secret.yaml
+New Vault password: qwe123
+Confirm New Vault password: qwe123
+
+#vars/secret.yaml
+user_info:
+  - userid: "testuser1"
+    userpw: "test1"
+  - userid: "testuser2"
+    userpw: "test2"
+```
+
+![1-0](/assets/img/a101/3w/1-0.png)
+ansible-vault를 이용하면 아래와 같이 secret에 암호화되어 저장된다. 이제 이걸 아래처러 사용 할 수가 있다.
+주의 할 점은 ansible.builtin.user 모듈의 update_password 옵션이 always가 기본값이기 때문에, 플레이북 실행시마다 password가 업데이트 된다. 이 때, password_hash(hashtype,salt)부분의 salt가 공백일시 랜덤한 값이 들어가게되면서 매번 해당 플레이북을 돌릴때마다 비밀번호의 해시값이 조금씩 변경된다. 그렇기때문에, update_password의 옵션을 on_create(생성시에만 업데이트하도록) 지정하거나, password에서 salt 값을 하나 지정해주면 된다. 
+
+
+```
+- hosts: all
+
+  vars_files:
+    - vars/secret.yaml
+
+  tasks:
+  - name: Create user
+    ansible.builtin.user:
+      name: "{{ item.userid }}"
+      password: "{{ item.userpw | password_hash('sha512') }}"
+      update_password: on_create
+      state: present
+      shell: /bin/bash
+    loop: "{{ user_info }}"
+
+
+# 실행
+$ ansible-playbook --ask-vault-pass create_user.yaml
+Vault password: 
+```
+
+이렇게 ansible-vault를 사용하여 암호화 할 수도 있지만, 이 암호화 시 사용한 비밀번호가 문제가된다. 플레이북 실행시, 복호화를 위해 비밀번호를 실행할 때마다 직접 타이핑을 해줘야하거나 자동화를 위해 파일로 남길 수도 있지만 비밀번호가 하드코딩되어 저장된다. 이런 이유로 복호화 키를 안전하게 보관하기 위해 외부 저장소를 사용할 수가 있다. 아래 테스트에서는 aws secret manager를 사용하여 복호화 키를 전달 하였다. [🔗](https://github.com/choisungwook/ansible_practice/tree/main/examples/playbook_ansible_vault)
+aws secretmanger에 캡쳐와 같이 key-value형태로 복호화 시 사용할 키를 넣어주고, 플레이북 실행시 가져올 수 있도록 스크립트도 하나 작성했다. 실행해보면 오류 없이 복호화 키를 가져와서 플레이북이 동작한다.
+
+![1-1](/assets/img/a101/3w/1-1.png)
+
+```
+# get_vault_passwd.sh 파일 내용
+#!/bin/sh
+aws secretsmanager get-secret-value --secret-id ansiblepasswd | jq -r .SecretString | jq -r .ansible_user_info
+
+# 플레이북 실행시
+$ ansible-playbook create_user.yaml --vault-password-file ./get_vault_passwd.sh
+```
+
+
+# 로컬에서 생성한 유저의 키 전달
+
+```
+- hosts: localhost
+  tasks:
+  - name : Create ssh key
+    ansible.builtin.user:
+      name: "{{ userid }}"
+      generate_ssh_key: true
+      ssh_key_bits: 2048
+      ssh_key_file: /home/{{ userid }}/.ssh/id_rsa
+
+- hosts: tnode 
+  tasks:
+  - name: Copy SSH Pub key
+    ansible.posix.authorized_key:
+      user: "{{ userid }}"
+      state: present
+      key: "{{ lookup('file', '/home/{{ userid }}/.ssh/id_rsa.pub') }}"
+# lookup은 playbook 외부 소스 접근시 사용 할 수 있다.
+# 예를 들어, 여기서는 '/home/{{ userid }}/.ssh/id_rsa.pub'인 파일을 찾아온다.
+```
+
+이 때, 두번째 task인 copy ssh pub key부분에서 권한 오류가 발생한다. 찾아보니, become의 경우 타겟노드(여기서는 tnode) 에만 적용 되는 것이라, local에 있는 키를 읽지 못하는 것이라고한다. 그래서 create ssh key에 register로 받은 값을 {{ hostvars.localhost.newuser.ssh_public_key }}로 키를 입력해보고.. tmp같은 다른 디렉토리에 키를 옮겨서 접근할 수 있도록도 해봤는데.. 왜인지 오류만 나서 ansible.cfg에서 default user를 root로 변경하여 진행하였다..
+
+```
+# ansible.cfg에서 변경
+[defaults]
+inventory = ./inventory
+remote_user = root
+inject_facts_as_vars = false
+
+# 실행 시
+$ sudo ansible-playbook -e userid=ansible create_sshkey.yaml --ask-pass
+```
+
+![1-2](/assets/img/a101/3w/1-2.png)
+
+타겟 노드로 키가 옮겨진 ansible 계정도 패스워드 입력없이 root 권한을 사용할 수 있게 추가 설정을 해주었다. sudoers에 ansible ALL=(root) NOPASSWD:ALL 을 넣어 어떤 호스트든 비밀번호 없이 루트 권한으로 실행 할 수 있도록 허용한다.
+```
+- hosts: all
+  tasks:
+  - name: Create file
+    ansible.builtin.file:
+      path: /etc/sudoers.d/ansible
+      mode: '0600'
+      state: touch
+
+  - name: Edit file
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers.d/ansible
+      line: ansible ALL=(root) NOPASSWD:ALL
+```
+
+
+# 패키지 설치
+
+운영체제마다 사용하는 패키지나 설정 파일 위치 등이 다르므로, 수집한 facts를 가지고 각각에 맞는 모듈이 실행되도록 하였다. 재사용 할 수 있는 롤을 사용하여 작성하였다. 
+
+```
+# 롤 생성을 위해 초기화해준다.
+
+$ ansible-galaxy role init --init-path ./roles role.nginx
+- Role role.nginx was created successfully
+
+# 그럼 이렇게 하위에 수많은 디렉토리와 파일이 생기는데, 각 디렉토리들은 롤 규칙으로 정해져 있다. 
+ tree roles/role.nginx/
+./roles/role.nginx/
+├── README.md
+├── defaults #가변변수
+│   └── main.yml #메인 태스크에서 사용된 변수 선언
+├── files #정적파일(index.html 위치)
+├── handlers #핸들러
+│   └── main.yml #restart service httpd
+├── meta
+│   └── main.yml
+├── tasks
+│   └── main.yml #메인 태스크(install service httpd & cp html file)
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars #불변변수
+    └── main.yml #메인 태스크와 핸들러에서 사용된 변수 선언
+```
+
+위에서 부터 각 위치에 필요한 파일들을 써넣다. 이렇게 직접 작성할 수도 있고, ansible-galaxy로 이미 누군가 만들어 둔 롤을 받아서 사용도 가능하다.
+```
+
+# handlers/main.yml
+- name: Restart nginx
+  ansible.builtin.service:
+    name: "{{ service_name }}"
+    state: restarted
+
+# tasks/main.yml 
+# 팩트 변수로 수집되는 os를 가지고 when 조건을 사용할 것이라, 태스크 파일을 플레이북에 포함시키는 모듈을 사용
+- name: Import playbook
+  ansible.builtin.include_tasks:
+    file: "{{ ansible_facts.distribution }}.yml"
+
+# 각 os마다 index.html 기본 경로 지정
+- name: Copy nginx index file when Ubuntu
+  ansible.builtin.template:
+    src: index.html
+    dest: /var/www/html/index.html
+  notify: "Restart nginx"
+  when: ansible_facts.distribution == "Ubuntu"
+
+- name: Copy nginx index file when Other OS
+  ansible.builtin.template:
+    src: index.html
+    dest: /var/www/html/index.html
+  notify: "Restart nginx"
+  when: ansible_facts.distribution in fedora_os
+
+# tasks 하위에 각 os별 맞는 설치패키지로 yaml파일을 만들었다. 예를 들어, 우분투의 경우는 아래와 같다.
+- name: Install nginx using apt
+  ansible.builtin.apt:
+    name: "{{ package_name }}"
+    state: latest
+
+# nginx index.html에 넣을 내용을 template에 작성해둔다.
+# templates/index.html
+test page
+
+# vars/main.yml
+package_name : nginx
+service_name : nginx
+fedora_os:
+ - RedHat
+ - CentOS
+```
+
+이렇게 작성해두고 role 디렉토리 상위에서 사용 할 수가 있다. role의 위치가 roles/role.nginx이지만, ansible.cfg에서 roles_path = ./roles와 같은 형식으로 경로를 지정해 둘 수 있다.
+```
+- name: test
+  hosts: tnode
+  pre_tasks:
+    - name: Print Start role
+      ansible.builtin.debug:
+        msg: "Start to install"
+  roles:
+    - role: role.nginx
+  tasks:
+    - name: Curl test
+      ansible.builtin.uri:
+        url: http://tnode1
+        return_content: true
+      register: curl_result
+      notify: Print result
+      changed_when: true
+  post_tasks:
+    - name: Print Finish role
+      ansible.builtin.debug:
+        msg: "Finish role play"
+  handlers:
+    - name: Print result
+      ansible.builtin.debug:
+        msg: "{{ curl_result.content }}"
+# 동작 순서
+# pre_tasks > role > tasks > handler > post_tasks
+```
+
+![1-3](/assets/img/a101/3w/1-3.png)
+curl로 호출하면 role을 통해 넣었던 test page가 반환된다.
