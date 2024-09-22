@@ -31,7 +31,7 @@ calico cni 설치시, 데몬셋으로 calico-node pod가 생성되는데 내부�
 - confd는 calico datastore에서 변경이 일어나면, conf가 받아와 bird에게 전달한다.
 
 이렇게 구성된 calico-node만을 사용할 수도 있지만, 성능 효율을 위해 typha를 두어 사용 할 수도 있다. [🔗](https://www.tigera.io/blog/why-use-typha-in-your-calico-kubernetes-deployments/)
-typha는 felix, confd 등을 대신하여 datastore와 연결되어 중간 역할을 하게된다. 하나의 typha에서 여러 felix 를 지원할 수 있기 때문에, datastore의 부하가 준다. felix의 경우에도 datastore에서 felix와는 관련없는 업데이트 값에 대해서는 필터링되기 때문에 felix가 사용하게되는 cpu 사용량도 줄게 된다.
+typha는 felix, confd 등을 대신하여 datastore와 연결되어 중간 역할을 하게된다. 하나의 typha에서 여러 felix 를 지원할 수 있기 때문에, datastore의 부하가 줄어든다. felix의 경우에도 datastore에서 felix와는 관련없는 업데이트 값에 대해서는 필터링되기 때문에 felix가 사용하게되는 cpu 사용량도 줄게 된다.
 
 마지막으로, calico는 자체 ipam(ip address management) 플러그인을 가지고 있다. 노드 대역과 연관되지 않은 ip대역을 ip pool로 구성 후, ip pool 리소스를 사용하여 pod 생성시 ip주소가 할당되는 방식이다. [🔗](https://docs.tigera.io/calico/latest/networking/ipam/get-started-ip-addresses)
 
