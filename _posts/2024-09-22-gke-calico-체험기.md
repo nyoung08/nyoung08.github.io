@@ -138,7 +138,7 @@ NAME   CIDR   NAT   IPIPMODE   VXLANMODE   DISABLED   DISABLEBGPEXPORT   SELECTO
 일반적으로 사용하는 calico ipip mode의 경우 overlay network이기 때문에 tunnel 인터페이스가 존재하지만, gke에서는 alias ip를 사용한 vpc native cluster라 tunnel 인터페이스가 없다. [🔗](https://docs.tigera.io/calico/latest/networking/determine-best-networking#calico-compatible-cni-plugins-and-cloud-provider-integrations)
 
 ```
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
@@ -169,7 +169,7 @@ mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
        valid_lft forever preferred_lft forever
        
 # host-local ipam을 사용하게 되면서 서로의 대역을 bgp로 광고하는 bird 필요없어서.. bird로 광고받은 대역이 없다.(bird가 없다..)
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c route
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c route
 default via 10.0.0.1 dev eth0 proto dhcp src 10.0.0.24 metric 1024
 10.0.0.1 dev eth0 proto dhcp scope link src 10.0.0.24 metric 1024
 169.254.123.0/24 dev docker0 proto kernel scope link src 169.254.123.1 linkdown
@@ -179,9 +179,9 @@ default via 10.0.0.1 dev eth0 proto dhcp src 10.0.0.24 metric 1024
 192.168.1.4 dev calic906454c831 scope link
 
 # 서비스를 올리기 전 기본으로 생성되어있는 iptables rule 갯수 확인
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t nat -L | wc -l
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t nat -L | wc -l
 178
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t filter -L | wc -l
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t filter -L | wc -l
 264
 ```
 
@@ -279,7 +279,7 @@ rtt min/avg/max/mdev = 0.091/0.119/0.173/0.037 ms
 
 
 # pod가 있는 node에서 pod1의 interface에 대해 tcpdump를 떠보면,
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
 ...
 16: calibd2348b4f67@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1460 qdisc noqueue state UP group default qlen 1000
     link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netns cni-567e113e-68c2-da7c-8c3b-ffb07fc165ed
@@ -290,7 +290,7 @@ root@gke-nyoung-cluster-nyoung-pool-da17714f-205w:~# tcpdump -i calibd2348b4f67
 
 
 # 먼저 노드에서 pod2(192.168.1.10)의 mac주소는 arp 테이블에서 확인이 되기 때문에, pod2의 mac주소가 반환됨
-15:56:06.009527 ARP, Request who-has 192.168.1.10 tell gke-nyoung-cluster-nyoung-pool-da17714f-205w.asia-northeast3-a.c.dhha-team-20221221.internal, length 28
+15:56:06.009527 ARP, Request who-has 192.168.1.10 tell gke-nyoung-cluster-nyoung-pool-da17714f-205w.asia-northeast3-a.c.project_id.internal, length 28
 15:56:06.009542 ARP, Reply 192.168.1.10 is-at 4a:24:e5:6d:cf:84 (oui Unknown), length 28
 
 # pod1(192.168.1.9) > pod2(192.168.1.10) 으로 icmp request를 날림
@@ -312,7 +312,7 @@ root@gke-nyoung-cluster-nyoung-pool-da17714f-205w:~# tcpdump -i calibd2348b4f67
 
 ```
 # 노드에서 pod와 연결된 interface의 proxy_arp를 확인
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
 ...
 17: calice0906292e2@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1460 qdisc noqueue state UP group default qlen 1000
     link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netns cni-84827d09-c36f-72b6-778a-5d7ff48349a2
@@ -324,19 +324,19 @@ mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ ip -c add
        valid_lft forever preferred_lft forever
        
 # node의 interface eht0는 proxy arp가 설정되지 않음
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ cat /proc/sys/net/ipv4/conf/eth0/proxy_arp
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ cat /proc/sys/net/ipv4/conf/eth0/proxy_arp
 0
 # pod와 연결된 interface들은 모두 proxy arp가 설정되어있다. 해당 값이 0으로 비활성화 되면, 통신을 하지 못하게 된다.
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ cat /proc/sys/net/ipv4/conf/calice0906292e2/proxy_arp
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ cat /proc/sys/net/ipv4/conf/calice0906292e2/proxy_arp
 1
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ cat /proc/sys/net/ipv4/conf/calice0906292e2/proxy_arp
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ cat /proc/sys/net/ipv4/conf/calice0906292e2/proxy_arp
 1
 
 # node에서 iptables rule 갯수를 다시 확인해보면, filter table이 pod당 40개 가량 늘었다.
 # overlay가 아니여서 nat table의 수는 변경 없다.
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t nat -L | wc -l
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t nat -L | wc -l
 178
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t filter -L | wc -l
+eunyoung@gke-nyoung-cluster-nyoung-pool-da17714f-205w ~ $ sudo iptables -t filter -L | wc -l
 344
 ```
 
@@ -353,7 +353,7 @@ pod1(192.168.1.11) > pod2(192.168.1.12)
 (pod1) 16:08:16.947392 IP pod1 > 192.168.1.12: ICMP echo request, id 27, seq 1, length 64
 
 # 노드에서 pod2로 arp 요청 후 전달하면 icmp 요청이 들어온다.
-(pod2) 16:08:16.947458 ARP, Request who-has pod2 tell gke-nyoung-cluster-nyoung-pool-da17714f-205w.asia-northeast3-a.c.dhha-team-20221221.internal, length 28
+(pod2) 16:08:16.947458 ARP, Request who-has pod2 tell gke-nyoung-cluster-nyoung-pool-da17714f-205w.asia-northeast3-a.c.project_id.internal, length 28
 (pod2) 16:08:16.947469 ARP, Reply pod2 is-at e6:0e:ad:ba:c4:77 (oui Unknown), length 28
 (pod2) 16:08:16.947472 IP 192.168.1.11 > pod2: ICMP echo request, id 27, seq 1, length 64
 
@@ -368,7 +368,7 @@ pod1(192.168.1.11) > pod2(192.168.1.12)
 
 # 내 생각으로는 16:08:16.947490 과 16:08:16.947501 사이에 pod1을 묻는 arp가 한번 더 있을 것으로 생각되었는데.. 아무것도 없었다. 
 # 왜인지.. icmp통신을 모두 마친 뒤, 16:08:22에 pod1에 아래와 같이 arp통신이 일어났다.
-(pod1) 16:08:22.189952 ARP, Request who-has pod1 tell gke-nyoung-cluster-nyoung-pool-da17714f-205w.asia-northeast3-a.c.dhha-team-20221221.internal, length 28
+(pod1) 16:08:22.189952 ARP, Request who-has pod1 tell gke-nyoung-cluster-nyoung-pool-da17714f-205w.asia-northeast3-a.c.project_id.internal, length 28
 (pod1) 16:08:22.190075 ARP, Reply pod1 is-at 32:ae:50:1c:7c:42 (oui Unknown), length 28
 
 
@@ -546,7 +546,7 @@ pool-zone-1   192.168.50.0/24   true   Never      Always      false      false  
 
 
 # 노드에 들어가서 config 파일을 변경해줬다.
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ sudo vi /etc/cni/net.d/10-calico.conflist
+eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ sudo vi /etc/cni/net.d/10-calico.conflist
 ...
   "ipam": {
         "type": "calico-ipam",
@@ -569,7 +569,7 @@ configmap/netd-config edited
       
 
 # vxlan interface가 생성되지 않는다..
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ ip -c add
+eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ ip -c add
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
@@ -599,7 +599,7 @@ mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ ip -c add
     inet6 fe80::ecee:eeff:feee:eeee/64 scope link
        valid_lft forever preferred_lft forever
        
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ ip -c route
+eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ ip -c route
 default via 10.0.0.1 dev eth0 proto dhcp src 10.0.0.20 metric 1024
 10.0.0.1 dev eth0 proto dhcp scope link src 10.0.0.20 metric 1024
 169.254.123.0/24 dev docker0 proto kernel scope link src 169.254.123.1 linkdown
@@ -693,7 +693,7 @@ spec:
 NAME          CIDR              NAT    IPIPMODE      VXLANMODE   DISABLED   DISABLEBGPEXPORT   SELECTOR
 pool-zone-1   192.168.50.0/24   true   CrossSubnet   Never       false      false              all()
 
-mzc02-eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ ip -c add
+eunyoung@gke-nyoung-cluster-nyoung-pool-0f26b766-1wp8 ~ $ ip -c add
 ...
 16: tunl0@NONE: <NOARP,UP,LOWER_UP> mtu 1440 qdisc noqueue state UNKNOWN group default qlen 1000
     link/ipip 0.0.0.0 brd 0.0.0.0
