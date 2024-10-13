@@ -173,7 +173,7 @@ httproute.gateway.networking.k8s.io/httpbinroute created
 # 요청 ip는 내 local ip, lb ip 순으로 나와있다.
 ❯ curl nyoung.xyz/ip
 {
-  "origin": "121.167.232.64,34.117.246.19"
+  "origin": "121.167.233.64,34.117.246.19"
 }
 
 # gatewayAPI는 ingress와 다르게 default가 기본으로 설정되지 않는다.
