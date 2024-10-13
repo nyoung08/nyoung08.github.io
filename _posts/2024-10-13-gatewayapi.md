@@ -375,7 +375,7 @@ Hostname: dp-v3-f76cdccd5-cpvm4
 
 ---
 참고
-[https://gateway-api.sigs.k8s.io/guides/multiple-ns/](https://gateway-api.sigs.k8s.io/guides/multiple-ns/)
-[https://www.solo.io/blog/gateway-api-tutorial-blog/](https://www.solo.io/blog/gateway-api-tutorial-blog/)
+- [https://gateway-api.sigs.k8s.io/guides/multiple-ns/](https://gateway-api.sigs.k8s.io/guides/multiple-ns/)
+- [https://www.solo.io/blog/gateway-api-tutorial-blog/](https://www.solo.io/blog/gateway-api-tutorial-blog/)
 
 
